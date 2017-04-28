@@ -19,6 +19,23 @@ Script properties:
 - Provide local backup and remote backup (rsync between servers) script
 - Provided under HHVM install CentOS 6,7
 
+## How to configure mysql remote connection
+1. 打开iptables 3306端口
+```bash
+iptables -I INPUT 4 -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+service iptables save #保存iptables规则
+```
+
+2. 数据库授权
+远程连接新建一个帐号（帐号名不能为root）。
+如：添加一个用户名为db_user，密码为db_pass，授权为% （%表示所有外围IP能连接）对db_name数据库所有权限，命令如下
+```bash
+# mysql -uroot -p
+MySQL [(none)]> grant all privileges on db_name.* to db_user@’%’ identified by ‘db_pass’; #授权语句，特别注意有分号
+MySQL [(none)]> flush privileges;
+MySQL [(none)]> exit; #退出数据库控制台，特别注意有分号
+```
+
 ## How to use
 
 If your server system: CentOS/Redhat (Do not enter "//" and "// subsequent sentence)
